@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding-top: 30px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        h2 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Trading Platform</h1>
+        </header>
+        
+        <main>
+            <section class="balances">
+                <h2>Your Balance</h2>
+                <div id="balance-info">
+                    <p>USD: <span id="usd-balance">1000</span></p>
+                    <p>BTC: <span id="btc-balance">0</span></p>
+                </div>
+            </section>
+
+            <section class="trade-form">
+                <h2>Place a Trade</h2>
+                <form id="trade-form">
+                    <label for="currency">Currency Pair:</label>
+                    <select id="currency">
+                        <option value="USD-BTC">USD/BTC</option>
+                        <option value="USD-ETH">USD/ETH</option>
+                    </select>
+
+                    <label for="amount">Amount:</label>
+                    <input type="number" id="amount" placeholder="Enter amount" required>
+
+                    <label for="price">Price:</label>
+                    <input type="number" id="price" placeholder="Enter price" required>
+
+                    <button type="submit">Trade</button>
+                </form>
+            </section>
+
+            <section class="order-history">
+                <h2>Order History</h2>
+                <ul id="order-history-list">
+                    <!-- Orders will appear here -->
+                </ul>
+            </section>
+        </main>
+    </div>
+    <script>
+        const form = document.getElementById('trade-form');
+        const orderHistoryList = document.getElementById('order-history-list');
+        const usdBalanceEl = document.getElementById('usd-balance');
+        const btcBalanceEl = document.getElementById('btc-balance');
+
+        // Fake initial balances
+        let usdBalance = 1000;
+        let btcBalance = 0;
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('amount').value);
+            const price = parseFloat(document.getElementById('price').value);
+            const currencyPair = document.getElementById('currency').value;
+            
+            if (currencyPair === "USD-BTC" && amount <= usdBalance) {
+                // Execute trade (example: buy BTC)
+                const cost = amount * price;
+                usdBalance -= cost;
+                btcBalance += amount;
+                
+                updateBalances();
+                addToOrderHistory(`Bought ${amount} BTC for ${cost} USD`);
+            }
+            
+            // Add more logic for different pairs or trade actions
+        });
+
+        function updateBalances() {
+            usdBalanceEl.textContent = usdBalance.toFixed(2);
+            btcBalanceEl.textContent = btcBalance.toFixed(2);
+        }
+
+        function addToOrderHistory(order) {
+            const listItem = document.createElement('li');
+            listItem.textContent = order;
+            orderHistoryList.appendChild(listItem);
+        }
+    </script>
+</body>
+</html>
