@@ -52,6 +52,40 @@
         h2 {
             color: #333;
         }
+
+        .trade-offers {
+            grid-column: span 2;
+        }
+
+        .trade-offer {
+            background: #e9e9e9;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .trade-offer h3 {
+            margin-top: 0;
+        }
+
+        .offer-button {
+            margin-top: 10px;
+            text-align: right;
+        }
+
+        .offer-form input,
+        .offer-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .offer-form button {
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -70,71 +104,63 @@
             </section>
 
             <section class="trade-form">
-                <h2>Place a Trade</h2>
+                <h2>Place a Trade Offer</h2>
                 <form id="trade-form">
-                    <label for="currency">Currency Pair:</label>
-                    <select id="currency">
-                        <option value="USD-BTC">USD/BTC</option>
-                        <option value="USD-ETH">USD/ETH</option>
-                    </select>
+                    <label for="selling">Selling:</label>
+                    <textarea id="selling" placeholder="What are you selling?" required></textarea>
 
-                    <label for="amount">Amount:</label>
-                    <input type="number" id="amount" placeholder="Enter amount" required>
+                    <label for="looking-for">Looking for:</label>
+                    <textarea id="looking-for" placeholder="What are you looking for?" required></textarea>
 
-                    <label for="price">Price:</label>
-                    <input type="number" id="price" placeholder="Enter price" required>
+                    <label for="username">Your Username:</label>
+                    <input type="text" id="username" placeholder="Enter your username" required>
 
-                    <button type="submit">Trade</button>
+                    <button type="submit">Post Offer</button>
                 </form>
             </section>
 
-            <section class="order-history">
-                <h2>Order History</h2>
-                <ul id="order-history-list">
-                    <!-- Orders will appear here -->
-                </ul>
+            <section class="trade-offers">
+                <h2>Trade Offers</h2>
+                <div id="offers-list">
+                    <!-- Trade offers will appear here -->
+                </div>
             </section>
         </main>
     </div>
     <script>
         const form = document.getElementById('trade-form');
-        const orderHistoryList = document.getElementById('order-history-list');
-        const usdBalanceEl = document.getElementById('usd-balance');
-        const btcBalanceEl = document.getElementById('btc-balance');
-
-        // Fake initial balances
-        let usdBalance = 1000;
-        let btcBalance = 0;
+        const offersList = document.getElementById('offers-list');
 
         form.addEventListener('submit', function (event) {
             event.preventDefault();
-            
-            const amount = parseFloat(document.getElementById('amount').value);
-            const price = parseFloat(document.getElementById('price').value);
-            const currencyPair = document.getElementById('currency').value;
-            
-            if (currencyPair === "USD-BTC" && amount <= usdBalance) {
-                // Execute trade (example: buy BTC)
-                const cost = amount * price;
-                usdBalance -= cost;
-                btcBalance += amount;
-                
-                updateBalances();
-                addToOrderHistory(`Bought ${amount} BTC for ${cost} USD`);
-            }
-            
-            // Add more logic for different pairs or trade actions
+
+            // Get user input
+            const selling = document.getElementById('selling').value;
+            const lookingFor = document.getElementById('looking-for').value;
+            const username = document.getElementById('username').value;
+
+            // Create a new offer element
+            const offer = document.createElement('div');
+            offer.classList.add('trade-offer');
+            offer.innerHTML = `
+                <h3>Selling: ${selling}</h3>
+                <p>Looking for: ${lookingFor}</p>
+                <p>Posted by: ${username}</p>
+                <div class="offer-button">
+                    <button onclick="messageUser('${username}')">Message</button>
+                </div>
+            `;
+
+            // Append new offer to the list
+            offersList.appendChild(offer);
+
+            // Clear the form
+            form.reset();
         });
 
-        function updateBalances() {
-            usdBalanceEl.textContent = usdBalance.toFixed(2);
-            btcBalanceEl.textContent = btcBalance.toFixed(2);
-        }
-
-        function addToOrderHistory(order) {
-            const listItem = document.createElement('li');
-            listItem.textContent = order;
-            orderHistoryList.appendChild(listItem);
+        // Function to handle the message button
+        function messageUser(username) {
+            alert(`Messaging ${username}... (This is just a placeholder)`);
         }
     </script>
 </body>
