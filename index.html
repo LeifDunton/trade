@@ -86,6 +86,24 @@
         .offer-form button {
             width: 100%;
         }
+
+        .message-box {
+            display: none;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .message-box textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -95,14 +113,6 @@
         </header>
         
         <main>
-            <section class="balances">
-                <h2>Your Balance</h2>
-                <div id="balance-info">
-                    <p>USD: <span id="usd-balance">1000</span></p>
-                    <p>BTC: <span id="btc-balance">0</span></p>
-                </div>
-            </section>
-
             <section class="trade-form">
                 <h2>Place a Trade Offer</h2>
                 <form id="trade-form">
@@ -127,14 +137,26 @@
             </section>
         </main>
     </div>
+
+    <div class="message-box" id="message-box">
+        <h3>Send Message</h3>
+        <textarea id="message-text" placeholder="Type your message here..." required></textarea>
+        <button id="send-message">Send Message</button>
+        <button id="close-message-box">Close</button>
+    </div>
+
     <script>
         const form = document.getElementById('trade-form');
         const offersList = document.getElementById('offers-list');
+        const messageBox = document.getElementById('message-box');
+        const sendMessageButton = document.getElementById('send-message');
+        const closeMessageButton = document.getElementById('close-message-box');
+        let currentUsername = null;
+        let currentOffer = null;
 
         form.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            // Get user input
             const selling = document.getElementById('selling').value;
             const lookingFor = document.getElementById('looking-for').value;
             const username = document.getElementById('username').value;
@@ -147,7 +169,7 @@
                 <p>Looking for: ${lookingFor}</p>
                 <p>Posted by: ${username}</p>
                 <div class="offer-button">
-                    <button onclick="messageUser('${username}')">Message</button>
+                    <button onclick="openMessageBox('${username}', '${selling}')">Message</button>
                 </div>
             `;
 
@@ -159,9 +181,37 @@
         });
 
         // Function to handle the message button
-        function messageUser(username) {
-            alert(`Messaging ${username}... (This is just a placeholder)`);
+        function openMessageBox(username, offer) {
+            currentUsername = username;
+            currentOffer = offer;
+            messageBox.style.display = 'block';
         }
+
+        // Send message
+        sendMessageButton.addEventListener('click', function () {
+            const messageText = document.getElementById('message-text').value;
+            if (messageText.trim() === '') {
+                alert('Please enter a message!');
+                return;
+            }
+
+            // Log the message (for now, we just log it in the console)
+            console.log(`Message to ${currentUsername} about ${currentOffer}: ${messageText}`);
+
+            // Optionally, you could store this message to local storage or send it to a server
+
+            alert('Message sent!');
+
+            // Close message box
+            messageBox.style.display = 'none';
+            document.getElementById('message-text').value = ''; // Clear message field
+        });
+
+        // Close the message box
+        closeMessageButton.addEventListener('click', function () {
+            messageBox.style.display = 'none';
+            document.getElementById('message-text').value = ''; // Clear message field
+        });
     </script>
 </body>
 </html>
